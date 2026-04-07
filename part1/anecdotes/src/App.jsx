@@ -4,6 +4,17 @@ const Button = ({ onClick, text }) => {
     return <button onClick={onClick}>{text}</button>;
 };
 
+//modular anecdote
+const Anecdote = ({ title, anecdote, votes }) => {
+    return (
+        <div>
+            <h3>{title}</h3>
+            <p>{anecdote}</p>
+            <p>Has {votes} votes</p>
+        </div>
+    );
+};
+
 const App = () => {
     const anecdotes = [
         "If it hurts, do it more often.",
@@ -19,41 +30,36 @@ const App = () => {
     const [selected, setSelected] = useState(0);
     const [votes, setVote] = useState(Array(anecdotes.length).fill(0));
 
-    console.log(votes);
-
     const selectRandom = () => {
         const index = Math.floor(Math.random() * anecdotes.length);
         setSelected(index);
     };
 
-    const castVote = () => () => {
+    const castVote = () => {
         const copyVotes = [...votes];
         copyVotes[selected] += 1;
         setVote(copyVotes);
     };
 
-    const mostVotedIndex = votes.reduce(
-        (maxIndex, currentVal, currentIndex, votes) => {
-            return currentVal > votes[maxIndex] ? currentIndex : maxIndex;
-        },
-    );
+    const mostVotes = Math.max(...votes);
+    const mostVotesIndex = votes.indexOf(mostVotes);
 
-    console.log(mostVotedIndex);
     return (
         <div>
-            <h3>Anectdote of the day</h3>
-            {anecdotes[selected]}
-            <p>has {votes[selected]}</p>
+            <Anecdote
+                title="Anecdote of the day"
+                anecdote={anecdotes[selected]}
+                votes={votes[selected]}
+            />
             <Button onClick={selectRandom} text="next anecdote" />
-            <Button onClick={castVote()} text="vote" />
-
-            <h3>Anecdote with most votes</h3>
-            <p>{anecdotes[mostVotedIndex]}</p>
-            <p>has {votes[mostVotedIndex]} votes</p>
+            <Button onClick={castVote} text="vote" />
+            <Anecdote
+                title="Anecdote with most votes"
+                anecdote={anecdotes[mostVotesIndex]}
+                votes={mostVotes}
+            />
         </div>
     );
 };
-
-//make it modular before submiting
 
 export default App;
