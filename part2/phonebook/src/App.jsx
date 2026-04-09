@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Filter, PersonForm, Persons } from "./components/Persons";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newPerson, setNewPerson] = useState({ name: "", number: "" });
     const [filter, setFilter] = useState("");
+    const [alert, setAlert] = useState(null);
 
     useEffect(() => {
         personService.getAll().then((initialPersons) => {
@@ -44,6 +46,13 @@ const App = () => {
             personService.create(newPersonObject).then((returnedPerson) => {
                 setPersons(persons.concat(returnedPerson));
                 setNewPerson({ name: "", number: "" });
+                setAlert({
+                    message: `Added ${returnedPerson.name}`,
+                    type: "success",
+                });
+                setTimeout(() => {
+                    setAlert(null);
+                }, 3500);
             });
         }
     };
@@ -69,9 +78,19 @@ const App = () => {
                         ),
                     );
                     setNewPerson({ name: "", number: "" });
+                    setAlert({
+                        message: `Updated ${returnedPerson.name}`,
+                        type: "success",
+                    });
+                    setTimeout(() => {
+                        setAlert(null);
+                    }, 3500);
                 })
                 .catch(() => {
-                    alert("Something went wrong");
+                    setAlert({
+                        message: `Information of ${personToUpdate.name} has already been removed from the server`,
+                        type: "error",
+                    });
                     setPersons(
                         persons.filter(
                             (person) => person.id !== personToUpdate.id,
@@ -104,6 +123,9 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            {alert && (
+                <Notification message={alert.message} type={alert.type} />
+            )}
             <Filter handler={handleFilterChange} text="filter shown with" />
             <PersonForm
                 submitHandler={addPerson}

@@ -6,9 +6,19 @@
       "id": "2"
     },
     {
-      "name": "rex",
-      "number": "12345",
-      "id": "1hFodmSlWzo"
+      "name": "Hekk",
+      "number": "222",
+      "id": "T_xSMLbSalw"
+    },
+    {
+      "name": "SS",
+      "number": "222",
+      "id": "rZ-miUX3egs"
+    },
+    {
+      "name": "Hehge",
+      "number": "2323",
+      "id": "gYvkj8QUCOs"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
