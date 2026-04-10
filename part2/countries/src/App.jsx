@@ -17,6 +17,7 @@ const App = () => {
 
     const searchHandler = (event) => {
         setQuery(event.target.value);
+        setSelected(null);
     };
 
     const filteredCountries = query

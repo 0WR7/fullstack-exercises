@@ -1,11 +1,12 @@
 import Weather from "./Weather";
 
 export const Country = ({ country }) => {
-    //temporary country.capital[0]
+    const capital = country.capital[0] || "Not found";
+
     return (
         <div>
             <h3>{country.name.common}</h3>
-            <p>Capital {country.capital[0] || "Not found"}</p>
+            <p>Capital {capital}</p>
             <p>Area {country.area}</p>
             <h4>Languages</h4>
             <ul>
@@ -15,7 +16,7 @@ export const Country = ({ country }) => {
                     ))}
             </ul>
             <img src={country.flags.png} alt={country.flags.alt} />
-            <Weather country={country} />
+            {country.capital?.[0] && <Weather country={country} />}
         </div>
     );
 };

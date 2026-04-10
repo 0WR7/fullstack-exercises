@@ -13,8 +13,9 @@ const getCountry = (country) => {
 };
 
 const getWeather = (country) => {
+    const capital = country.capital?.[0];
     const request = axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${country.capital[0]},${country.cca2}&appid=${weather_key}&units=metric`,
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(capital)},${country.cca2}&appid=${weather_key}&units=metric`,
     );
     return request.then((response) => response.data);
 };
