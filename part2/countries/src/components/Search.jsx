@@ -1,5 +1,10 @@
 const Search = ({ handler }) => {
-    <div>
-        <input onChange={handler} />
-    </div>;
+    return (
+        <div>
+            <p>find countries</p>
+            <input onChange={handler} type="text" />
+        </div>
+    );
 };
+
+export default Search;

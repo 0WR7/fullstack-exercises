@@ -28,5 +28,4 @@ export const Persons = ({ persons, handler }) => (
                 <button onClick={() => handler(person)}>delete</button>
             </li>
         ))}
-    </ul>
-);
+    </ul>);
