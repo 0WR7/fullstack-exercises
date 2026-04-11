@@ -1,4 +1,4 @@
-const persons = [
+let personsDB = [
     {
         id: "1",
         name: "Arto Hellas",
@@ -21,4 +21,4 @@ const persons = [
     },
 ];
 
-module.exports = { persons };
+export default personsDB;
