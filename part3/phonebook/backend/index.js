@@ -1,13 +1,14 @@
 import express from "express";
 import morgan from "morgan";
-import personsArray from "./persons.js";
 import cors from "cors";
+import personsArray from "./PersonsDB.js";
 
 let persons = personsArray;
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static("dist"));
 
 morgan.token("body", (req) => JSON.stringify(req.body));
 

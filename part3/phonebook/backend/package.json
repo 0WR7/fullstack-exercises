@@ -1,0 +1,16 @@
+{
+    "name": "phonebook-backend",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "node index.js",
+        "build": "npm install",
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.6",
+        "express": "^5.2.1",
+        "morgan": "^1.10.1"
+    }
+}

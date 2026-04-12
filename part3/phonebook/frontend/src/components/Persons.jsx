@@ -19,7 +19,6 @@ export const PersonForm = ({ submitHandler, name, number, handler }) => {
     );
 };
 
-//could swap person for person.id but w/e
 export const Persons = ({ persons, handler }) => (
     <ul>
         {persons.map((person) => (
@@ -28,4 +27,5 @@ export const Persons = ({ persons, handler }) => (
                 <button onClick={() => handler(person)}>delete</button>
             </li>
         ))}
-    </ul>);
+    </ul>
+);

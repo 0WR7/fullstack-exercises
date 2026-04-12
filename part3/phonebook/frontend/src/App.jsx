@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Filter, PersonForm, Persons } from "./components/Persons";
 import personService from "./services/persons";
 import Notification from "./components/Notification";
@@ -19,8 +19,6 @@ const App = () => {
         const { name, value } = event.target;
         setNewPerson({ ...newPerson, [name]: value });
     };
-
-    //can be broken down and further improved
 
     const addPerson = (event) => {
         event.preventDefault();
@@ -109,7 +107,6 @@ const App = () => {
             });
     };
 
-    //filter logic
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
     };
