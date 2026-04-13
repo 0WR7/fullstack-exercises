@@ -7,7 +7,7 @@ const App = () => {
     const [persons, setPersons] = useState([]);
     const [newPerson, setNewPerson] = useState({ name: "", number: "" });
     const [filter, setFilter] = useState("");
-    const [alert, setAlert] = useState(null);
+    const [notification, setNotification] = useState(null);
 
     useEffect(() => {
         personService.getAll().then((initialPersons) => {
@@ -39,17 +39,17 @@ const App = () => {
                 persons.find((person) => person.name === newPerson.name),
             );
         } else if (persons.some((person) => person.name === newPerson.name)) {
-            alert(`${newPerson.name} is already added to the phonebook`);
+            window.alert(`${newPerson.name} is already added to the phonebook`);
         } else {
             personService.create(newPersonObject).then((returnedPerson) => {
                 setPersons(persons.concat(returnedPerson));
                 setNewPerson({ name: "", number: "" });
-                setAlert({
+                setNotification({
                     message: `Added ${returnedPerson.name}`,
                     type: "success",
                 });
                 setTimeout(() => {
-                    setAlert(null);
+                    setNotification(null);
                 }, 3500);
             });
         }
@@ -76,16 +76,16 @@ const App = () => {
                         ),
                     );
                     setNewPerson({ name: "", number: "" });
-                    setAlert({
+                    setNotification({
                         message: `Updated ${returnedPerson.name}`,
                         type: "success",
                     });
                     setTimeout(() => {
-                        setAlert(null);
+                        setNotification(null);
                     }, 3500);
                 })
                 .catch(() => {
-                    setAlert({
+                    setNotification({
                         message: `Information of ${personToUpdate.name} has already been removed from the server`,
                         type: "error",
                     });
@@ -120,8 +120,11 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            {alert && (
-                <Notification message={alert.message} type={alert.type} />
+            {notification && (
+                <Notification
+                    message={notification.message}
+                    type={notification.type}
+                />
             )}
             <Filter handler={handleFilterChange} text="filter shown with" />
             <PersonForm
