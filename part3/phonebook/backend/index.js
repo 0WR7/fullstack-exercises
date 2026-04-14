@@ -12,7 +12,7 @@ app.use(express.static("dist"));
 morgan.token("body", (req) => JSON.stringify(req.body));
 app.use(morgan(":method :url :status :response-time ms body=:body"));
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, response, next) => {
     console.log(error.message);
 
     if (error.name === "CastError") {
@@ -26,7 +26,7 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (response) => {
     Person.find({}).then((people) => response.json(people));
 });
 
@@ -45,7 +45,7 @@ app.get("/api/persons/:id", (request, response, next) => {
 app.delete("/api/persons/:id", (request, response, next) => {
     const id = request.params.id;
     Person.findByIdAndDelete(id)
-        .then((result) => response.status(204).end())
+        .then(() => response.status(204).end())
         .catch((error) => next(error));
 });
 
@@ -70,9 +70,7 @@ app.post("/api/persons", (request, response, next) => {
                 number: body.number,
             });
 
-            return newPerson
-                .save()
-                .then((savedPerson) => response.json(savedPerson));
+            return newPerson.save().then((savedPerson) => response.json(savedPerson));
         })
         .catch((error) => next(error));
 });
@@ -96,7 +94,7 @@ app.put("/api/persons/:id", (request, response, next) => {
         .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (response) => {
     const now = new Date();
 
     Person.countDocuments({}).then((count) => {

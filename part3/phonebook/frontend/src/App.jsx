@@ -30,14 +30,10 @@ const App = () => {
 
         if (
             persons.some(
-                (person) =>
-                    person.name === newPerson.name &&
-                    person.number !== newPerson.number,
+                (person) => person.name === newPerson.name && person.number !== newPerson.number,
             )
         ) {
-            updatePerson(
-                persons.find((person) => person.name === newPerson.name),
-            );
+            updatePerson(persons.find((person) => person.name === newPerson.name));
         } else if (persons.some((person) => person.name === newPerson.name)) {
             window.alert(`${newPerson.name} is already added to the phonebook`);
         } else {
@@ -78,9 +74,7 @@ const App = () => {
                 .then((returnedPerson) => {
                     setPersons(
                         persons.map((person) =>
-                            person.id === returnedPerson.id
-                                ? returnedPerson
-                                : person,
+                            person.id === returnedPerson.id ? returnedPerson : person,
                         ),
                     );
                     setNewPerson({ name: "", number: "" });
@@ -97,11 +91,7 @@ const App = () => {
                         message: `${error.response.data.error}`,
                         type: "error",
                     });
-                    setPersons(
-                        persons.filter(
-                            (person) => person.id !== personToUpdate.id,
-                        ),
-                    );
+                    setPersons(persons.filter((person) => person.id !== personToUpdate.id));
                 });
         }
     };
@@ -109,9 +99,7 @@ const App = () => {
     const deletePerson = (personToDelete) => {
         window.confirm(`Delete ${personToDelete.name}?`) &&
             personService.deletePerson(personToDelete.id).then(() => {
-                setPersons(
-                    persons.filter((person) => person.id !== personToDelete.id),
-                );
+                setPersons(persons.filter((person) => person.id !== personToDelete.id));
             });
     };
 
@@ -120,19 +108,14 @@ const App = () => {
     };
 
     const filtered = filter
-        ? persons.filter((person) =>
-              person.name.toLowerCase().includes(filter.toLowerCase()),
-          )
+        ? persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
         : persons;
 
     return (
         <div>
             <h2>Phonebook</h2>
             {notification && (
-                <Notification
-                    message={notification.message}
-                    type={notification.type}
-                />
+                <Notification message={notification.message} type={notification.type} />
             )}
             <Filter handler={handleFilterChange} text="filter shown with" />
             <PersonForm
