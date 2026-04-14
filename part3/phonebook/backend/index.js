@@ -17,6 +17,10 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === "CastError") {
         return response.status(400).send({ error: "malformed id" });
+    } else if (error.name === "ValidationError") {
+        return response.status(400).json({
+            error: `Validation failed ${error.message}`,
+        });
     }
 
     next(error);
@@ -94,11 +98,13 @@ app.put("/api/persons/:id", (request, response, next) => {
 
 app.get("/info", (request, response) => {
     const now = new Date();
-    const people = Person.find({}).then((people) => response.json(people));
-    response.send(`<div>
-            <p>Phonebook has info for ${people.length} people</p>
-            <p>${now.toString()}</p>
-        </div>`);
+
+    Person.countDocuments({}).then((count) => {
+        response.send(`<div>
+                <p>Phonebook has info for ${count} people</p>
+                <p>${now.toString()}</p>
+            </div>`);
+    });
 });
 
 app.use(errorHandler);

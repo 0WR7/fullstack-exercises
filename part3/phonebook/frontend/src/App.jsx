@@ -41,17 +41,25 @@ const App = () => {
         } else if (persons.some((person) => person.name === newPerson.name)) {
             window.alert(`${newPerson.name} is already added to the phonebook`);
         } else {
-            personService.create(newPersonObject).then((returnedPerson) => {
-                setPersons(persons.concat(returnedPerson));
-                setNewPerson({ name: "", number: "" });
-                setNotification({
-                    message: `Added ${returnedPerson.name}`,
-                    type: "success",
-                });
-                setTimeout(() => {
-                    setNotification(null);
-                }, 3500);
-            });
+            personService
+                .create(newPersonObject)
+                .then((returnedPerson) => {
+                    setPersons(persons.concat(returnedPerson));
+                    setNewPerson({ name: "", number: "" });
+                    setNotification({
+                        message: `Added ${returnedPerson.name}`,
+                        type: "success",
+                    });
+                    setTimeout(() => {
+                        setNotification(null);
+                    }, 3500);
+                })
+                .catch((error) =>
+                    setNotification({
+                        message: `${String(error.response.data.error)}`,
+                        type: "error",
+                    }),
+                );
         }
     };
 
@@ -84,9 +92,9 @@ const App = () => {
                         setNotification(null);
                     }, 3500);
                 })
-                .catch(() => {
+                .catch((error) => {
                     setNotification({
-                        message: `Information of ${personToUpdate.name} has already been removed from the server`,
+                        message: `${error.response.data.error}`,
                         type: "error",
                     });
                     setPersons(
