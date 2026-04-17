@@ -1,18 +1,22 @@
-const blogRouter = require('express').Router()
-const Blog = require('../models/blog')
+const blogRouter = require("express").Router();
+const Blog = require("../models/blog");
 
-blogRouter.get("/", (request, response) => {
-    Blog.find({}).then(blogs => {
-        return response.json(blogs)
-    })
-})
+blogRouter.get("/", async (request, response) => {
+	const blogs = await Blog.find({});
+	response.json(blogs);
+});
 
-blogRouter.post('/', (request, response) => {
-    const blog = new Blog(request.body)
+blogRouter.post("/", (request, response) => {
+	const blog = new Blog(request.body);
 
-    blog.save().then(result => {
-        response.status(201).json(result)
-    })
-})
+	//implement the validation at schema
+	if (!blog.url || !blog.title) {
+		return response.sendStatus(400);
+	}
 
-module.exports = blogRouter
+	blog.save().then((result) => {
+		response.status(201).json(result);
+	});
+});
+
+module.exports = blogRouter;
