@@ -1,18 +1,36 @@
 const assert = require('node:assert')
-const { test, after, beforeEach, describe } = require('node:test')
+const { test, after, beforeEach, describe, before } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helpers')
 
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-const api = supertest(app)
+const api = supertest.agent(app)
 
 //notouch
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
+})
+let token
+
+before(async () => {
+    await User.deleteMany({})
+    await api.post('/api/users').send({
+        name: 'Tester',
+        username: 'Tester',
+        password: 'Tester',
+    })
+
+    const response = await api.post('/api/login').send({
+        username: 'Tester',
+        password: 'Tester',
+    })
+
+    token = response.body.token
 })
 
 describe('Main route 4.8', () => {
@@ -47,6 +65,7 @@ describe('4.10', () => {
 
         await api
             .post('/api/blogs/')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -61,7 +80,10 @@ describe('4.11', () => {
         const blogObject = new Blog(helper.listWithOneBlog[0]).toJSON()
         const { likes, ...blogWithoutLikes } = blogObject
 
-        const response = await api.post('/api/blogs/').send(blogWithoutLikes)
+        const response = await api
+            .post('/api/blogs/')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blogWithoutLikes)
 
         const returnedBlog = response.body
 
@@ -76,25 +98,44 @@ describe('4.12', () => {
         const { title, ...blogNoTitle } = blogObject
         const { url, ...blogNoUrl } = blogObject
 
-        await api.post('/api/blogs').send(blogNoTitle).expect(400)
-        await api.post('/api/blogs').send(blogNoUrl).expect(400)
-        await api.post('/api/blogs/').send(blogObject).expect(201)
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blogNoTitle)
+            .expect(400)
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blogNoUrl)
+            .expect(400)
+        await api
+            .post('/api/blogs/')
+            .set('Authorization', `Bearer ${token}`)
+            .send(blogObject)
+            .expect(201)
     })
 })
 
 describe('4.13', () => {
-    test('functionality for deleting a single blog post resource', async () => {
-        const initialBlogs = await helper.blogsInDb()
-        const blogToDelete = initialBlogs[0]
+    test('a blog can be deleted by the user who created it', async () => {
+        const response = await api
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(helper.newBlog)
+            .expect(201)
 
-        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+        const blogToDelete = response.body
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()
-
         const ids = blogsAtEnd.map((b) => b.id)
-        assert(!ids.includes(blogToDelete.id))
 
-        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+        assert(!ids.includes(blogToDelete.id))
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
     })
 })
 
@@ -109,8 +150,22 @@ describe('4.14', () => {
 
         const updatedBlog = response.body
 
-        console.log(updatedBlog)
         assert.strictEqual(blogToUpdate.likes, updatedBlog.likes)
+    })
+})
+
+describe('4.23', () => {
+    test('adding a blog fails with the proper status code 401 Unauthorized if a token is not provided', async () => {
+        blogsAtStart = await helper.blogsInDb()
+
+        response = await api
+            .post('/api/blogs/')
+            //no auth
+            .send(helper.newBlog)
+            .expect(401)
+
+        blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
     })
 })
 
