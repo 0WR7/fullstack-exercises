@@ -37,7 +37,11 @@ blogRouter.delete('/:id', async (request, response) => {
     }
     const blogToDelete = await Blog.findById(request.params.id)
 
-    if (blogToDelete.user.toString() !== user.id.toString()) {
+    if (!blogToDelete) {
+        return response.status(404).end()
+    }
+
+    if (blogToDelete.user.toString() !== user._id.toString()) {
         return response
             .status(401)
             .json({ error: 'Trying to delete another user`s content' })
@@ -58,6 +62,8 @@ blogRouter.put('/:id', async (request, response) => {
     }
     blog.likes = likes
     const updatedBlog = await blog.save()
+    await updatedBlog.populate('user')
+    console.log(updatedBlog)
     return response.json(updatedBlog)
 })
 
