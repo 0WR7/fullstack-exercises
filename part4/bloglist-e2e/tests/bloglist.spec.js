@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createDummyBlog } = require('./helper')
+const { loginWith, createDummyBlog, isSortedDesc } = require('./helper')
+const { title } = require('process')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -86,7 +87,7 @@ describe('Blog app', () => {
             await expect(likes).toHaveText('likes 1')
         })
 
-        test.only('a blog can be removed', async ({ page }) => {
+        test('a blog can be removed', async ({ page }) => {
             await createDummyBlog(page, {
                 title: 'Testing Blog',
                 author: 'Jacob Smith',
@@ -101,7 +102,7 @@ describe('Blog app', () => {
 
             await expect(page.locator('.blog')).toHaveCount(0)
         })
-        test.only('only the user who added the blog sees the blog`s delete button', async ({
+        test('only the user who added the blog sees the blog`s delete button', async ({
             page,
             request,
         }) => {
@@ -133,6 +134,61 @@ describe('Blog app', () => {
             await expect(
                 blog.getByRole('button', { name: 'remove' })
             ).toHaveCount(0)
+        })
+
+        test(' the blogs are arranged in the order according to the likes', async ({
+            page,
+            request,
+        }) => {
+            const blogs = [
+                {
+                    title: 'Blog no1',
+                    likes: 2,
+                },
+                {
+                    title: 'Blog no2',
+                    likes: 12,
+                },
+                {
+                    title: 'Blog no3',
+                    likes: 6,
+                },
+            ]
+
+            const loginResponse = await request.post(
+                'http://localhost:3001/api/login',
+                {
+                    data: {
+                        username: 'Tester',
+                        password: '123456',
+                    },
+                }
+            )
+            const { token } = await loginResponse.json()
+
+            for (const blog of blogs) {
+                await request.post('http://localhost:3001/api/blogs', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    data: {
+                        author: 'Json Smith',
+                        title: blog.title,
+                        url: 'Google.com',
+                        likes: blog.likes,
+                    },
+                })
+            }
+
+            await page.reload()
+
+            const blogElements = page.locator('.blog')
+            await expect(blogElements).toHaveCount(3)
+            const titles = await blogElements.evaluateAll((blogs) =>
+                blogs.map((blog) => blog.textContent.match(/Blog no\d+/)?.[0])
+            )
+
+            expect(titles).toEqual(['Blog no2', 'Blog no3', 'Blog no1'])
         })
     })
 })

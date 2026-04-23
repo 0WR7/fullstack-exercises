@@ -4,7 +4,7 @@ const loginWith = async (page, username, password) => {
     await page.getByRole('button', { name: 'login' }).click()
 }
 
-const createDummyBlog = async (page, { title, author, url }) => {
+const createDummyBlog = async (page, { title, author, url,}) => {
     await page.getByRole('button', { name: 'create' }).click()
     await page.getByLabel('title:').fill(title)
     await page.getByLabel('author:').fill(author)
@@ -12,4 +12,8 @@ const createDummyBlog = async (page, { title, author, url }) => {
     await page.getByRole('button', { name: 'create' }).click()
 }
 
-export { loginWith, createDummyBlog}
+const isSortedDesc = (array) => {
+    return array.every((val, i, array) => i === 0 || array[i - 1] >= val)
+}
+
+export { loginWith, createDummyBlog, isSortedDesc}

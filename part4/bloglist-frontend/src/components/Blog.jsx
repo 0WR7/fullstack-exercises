@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 //rewrite with conditional rendering
 
-const Blog = ({ blog, likeBlog, deleteBlog, userId }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
     const [visible, setVisible] = useState(false)
 
     const blogStyle = {
@@ -17,7 +17,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, userId }) => {
         setVisible(!visible)
     }
 
-    const canRemove = blog?.user?.id === userId
+    const canRemove = blog.user.username === username
 
     return (
         <div style={blogStyle} className="blog">

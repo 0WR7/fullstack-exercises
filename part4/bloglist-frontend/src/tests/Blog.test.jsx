@@ -9,6 +9,11 @@ describe('<Blog />', () => {
         url: 'google.com',
         likes: 777,
         id: 1234,
+        user: {
+            id: 'user-123',
+            name: 'Json Smith',
+            username: 'jsonsmith',
+        },
     }
 
     test('renders title and author but on URL or likes', () => {
@@ -39,7 +44,7 @@ describe('<Blog />', () => {
 
         //fails if not --could be queryByText instead
         const url = screen.getByText('google.com')
-        const likes = screen.getByText('777')
+        const likes = screen.getByText('likes 777')
 
         expect(url).toBeVisible()
         expect(likes).toBeVisible()
@@ -61,5 +66,28 @@ describe('<Blog />', () => {
         await user.click(likeButton)
 
         expect(likeBlog.mock.calls).toHaveLength(2)
+    })
+
+    test('remove button is rendered only for the user who created the blog', async () => {
+        const blogWithUser = {
+            ...blog,
+            user: {
+                id: 'user-123',
+                name: 'Json Smith',
+                username: 'jsonsmith',
+            },
+        }
+        const user = userEvent.setup()
+        const { rerender } = render(
+            <Blog blog={blogWithUser} username="jsonsmith" />
+        )
+
+        await user.click(screen.getByText('view'))
+
+        expect(screen.getByText('remove')).toBeVisible()
+
+        rerender(<Blog blog={blogWithUser} username="otheruser" />)
+
+        expect(screen.queryByText('remove')).toBeNull()
     })
 })

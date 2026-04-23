@@ -1,5 +1,6 @@
 import './stylesheets/App.css'
 import { useEffect, useRef, useState } from 'react'
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Login from './components/Login'
@@ -60,8 +61,9 @@ const App = () => {
         try {
             blogFormRef.current.toggleVisibility()
             const returnedBlog = await blogService.create(blogObject)
-            setBlogs((prevBlogs) => prevBlogs.concat(returnedBlog))
-            const message = `A new blog ${returnedBlog.title} by ${returnedBlog.author} was added`
+            const createdBlog = { ...returnedBlog, user }
+            setBlogs((prevBlogs) => prevBlogs.concat(createdBlog))
+            const message = `A new blog ${createdBlog.title} by ${createdBlog.author} was added`
             notificationSetter(message, 'success')
         } catch (error) {
             notificationSetter(normalizeErrorMessage(error), 'error')
@@ -118,6 +120,8 @@ const App = () => {
     }
 
     return (
+        
+        
         <div>
             {notification && (
                 <Notification
@@ -150,7 +154,7 @@ const App = () => {
                                 blog={blog}
                                 likeBlog={updateBlog}
                                 deleteBlog={deleteBlog}
-                                userId={user.id}
+                                username={user.username}
                             />
                         ))}
                 </div>
