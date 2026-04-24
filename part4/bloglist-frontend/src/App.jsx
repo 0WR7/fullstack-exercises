@@ -1,6 +1,13 @@
 import './stylesheets/App.css'
 import { useEffect, useRef, useState } from 'react'
-import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import {
+    Link,
+    Navigate,
+    Route,
+    BrowserRouter as Router,
+    Routes,
+    useNavigate,
+} from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Home from './components/Blogs'
@@ -31,6 +38,8 @@ const App = () => {
         }
     }, [])
 
+    const navigate = useNavigate()
+
     const handleLogin = async (event) => {
         event.preventDefault()
 
@@ -45,6 +54,8 @@ const App = () => {
             setUser(user)
             setUsername('')
             setPassword('')
+
+            navigate('/')
         } catch {
             notificationSetter('Wrong username or password', 'error')
         }
@@ -120,17 +131,27 @@ const App = () => {
         )
     }
 
+    //check the  login route asap
     return (
-        <Router>
+        <div>
             <div>
                 <Link to={'/'}>blogs</Link>
-                <Link to={'/login'}>login</Link>
+                {!user ? (
+                    <Link to={'/login'}>login</Link>
+                ) : (
+                    <button type="button" onClick={handleLogout}>
+                        logout
+                    </button>
+                )}
             </div>
             <Routes>
                 <Route path="/" element={<Home blogs={blogs} />} />
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={<Login username={username} password={password} />}
+                />
             </Routes>
-        </Router>
+        </div>
     )
 }
 
