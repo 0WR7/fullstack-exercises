@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 //rewrite with conditional rendering
 
-const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
     const [visible, setVisible] = useState(false)
 
     const blogStyle = {
@@ -17,7 +17,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
         setVisible(!visible)
     }
 
-    const canRemove = blog.user.username === username
+    const canRemove = blog?.user?.username === user?.username
 
     return (
         <div style={blogStyle} className="blog">
@@ -33,7 +33,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, username }) => {
                         <a href={blog.url}> {blog.url}</a>
                     </p>
                     <p className="likes">likes {blog.likes}</p>
-                    <button onClick={() => likeBlog(blog)}>like</button>
+                    {user && (
+                        <button onClick={() => likeBlog(blog)}>like</button>
+                    )}
                     <p> {blog?.user?.name}</p>
                     {canRemove && (
                         <button onClick={() => deleteBlog(blog.id)}>

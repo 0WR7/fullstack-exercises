@@ -6,11 +6,12 @@ import {
     Route,
     BrowserRouter as Router,
     Routes,
+    useMatch,
     useNavigate,
 } from 'react-router-dom'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
-import Home from './components/Blogs'
+import Blogs from './components/BlogList'
 import Login from './components/Login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -21,8 +22,6 @@ import loginService from './services/login'
 const App = () => {
     const [blogs, setBlogs] = useState([])
     const [notification, setNotification] = useState(null)
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
     useEffect(() => {
@@ -40,9 +39,7 @@ const App = () => {
 
     const navigate = useNavigate()
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
-
+    const handleLogin = async (username, password) => {
         try {
             const user = await loginService.login({ username, password })
 
@@ -52,9 +49,6 @@ const App = () => {
             )
             blogService.setToken(user.token)
             setUser(user)
-            setUsername('')
-            setPassword('')
-
             navigate('/')
         } catch {
             notificationSetter('Wrong username or password', 'error')
@@ -66,15 +60,17 @@ const App = () => {
         setUser(null)
         blogService.setToken(null)
         window.localStorage.removeItem('loggedBlogappUser')
+        navigate('/')
     }
 
     //links to BlogForm
     const createBlog = async (blogObject) => {
         try {
-            blogFormRef.current.toggleVisibility()
             const returnedBlog = await blogService.create(blogObject)
             const createdBlog = { ...returnedBlog, user }
             setBlogs((prevBlogs) => prevBlogs.concat(createdBlog))
+            //routing
+            navigate('/')
             const message = `A new blog ${createdBlog.title} by ${createdBlog.author} was added`
             notificationSetter(message, 'success')
         } catch (error) {
@@ -108,6 +104,7 @@ const App = () => {
         try {
             await blogService.deleteBlog(blogId)
             setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blogId))
+            navigate('/')
         } catch (error) {
             notificationSetter(normalizeErrorMessage(error), 'error')
         }
@@ -120,22 +117,17 @@ const App = () => {
         }, 3500)
     }
 
-    //blog show logic
-    const blogFormRef = useRef()
+    //usematch logic
 
-    const blogForm = () => {
-        return (
-            <Togglable buttonLabel={'create'} ref={blogFormRef}>
-                <BlogForm createOnSubmit={createBlog} />
-            </Togglable>
-        )
-    }
+    const match = useMatch('blogs/:id')
+    const blog = match ? blogs.find((b) => b.id === match.params.id) : null
 
     //check the  login route asap
     return (
         <div>
             <div>
                 <Link to={'/'}>blogs</Link>
+                <Link to={'/create'}>new blog</Link>
                 {!user ? (
                     <Link to={'/login'}>login</Link>
                 ) : (
@@ -145,10 +137,25 @@ const App = () => {
                 )}
             </div>
             <Routes>
-                <Route path="/" element={<Home blogs={blogs} />} />
+                <Route
+                    path="/create"
+                    element={<BlogForm createOnSubmit={createBlog} />}
+                />
+                <Route
+                    path="/blogs/:id"
+                    element={
+                        <Blog
+                            blog={blog}
+                            likeBlog={updateBlog}
+                            deleteBlog={deleteBlog}
+                            user={user}
+                        />
+                    }
+                />
+                <Route path="/" element={<Blogs blogs={blogs} />} />
                 <Route
                     path="/login"
-                    element={<Login username={username} password={password} />}
+                    element={<Login loginHandler={handleLogin} />}
                 />
             </Routes>
         </div>

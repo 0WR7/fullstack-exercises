@@ -53,7 +53,17 @@ describe('<Blog />', () => {
     test('like button clicked twice calls the event handler received as props twice', async () => {
         const likeBlog = vi.fn()
 
-        render(<Blog blog={blog} likeBlog={likeBlog} />)
+        render(
+            <Blog
+                blog={blog}
+                likeBlog={likeBlog}
+                user={{
+                    username: 'John',
+                    password: '1234',
+                    name: 'confucious',
+                }}
+            />
+        )
 
         const user = userEvent.setup()
         const button = screen.getByText('view')
@@ -79,14 +89,19 @@ describe('<Blog />', () => {
         }
         const user = userEvent.setup()
         const { rerender } = render(
-            <Blog blog={blogWithUser} username="jsonsmith" />
+            <Blog blog={blogWithUser} user={blogWithUser.user} />
         )
 
         await user.click(screen.getByText('view'))
 
         expect(screen.getByText('remove')).toBeVisible()
 
-        rerender(<Blog blog={blogWithUser} username="otheruser" />)
+        rerender(
+            <Blog
+                blog={blogWithUser}
+                user={{ username: 'Albatros', id: 'ssdramhdd' }}
+            />
+        )
 
         expect(screen.queryByText('remove')).toBeNull()
     })
