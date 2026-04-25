@@ -9,46 +9,46 @@ import {
 import { useState } from 'react'
 
 const blogCardSx = {
-    width: 'min(100%, 632px)',
+    width: 'min(100%, 720px)',
     mx: 'auto',
-    my: 2,
-    px: { xs: 3, sm: 5 },
-    py: { xs: 2.5, sm: 1.25 },
-    border: 0,
-    borderRadius: 4,
-    bgcolor: '#d9d9d9',
+    my: 1.25,
+    px: { xs: 1.5, sm: 2 },
+    py: 1.5,
+    border: '1px solid',
+    borderColor: '#dbeafe',
+    borderRadius: 1.5,
+    bgcolor: 'rgba(248, 252, 255, 0.92)',
     boxShadow: 'none',
 }
 
 const actionButtonSx = {
     minWidth: 0,
-    px: 4,
-    py: 0.5,
-    fontSize: '1.5rem',
-    fontWeight: 400,
+    px: 1,
+    py: 0.3,
+    fontSize: '0.8125rem',
+    fontWeight: 500,
     textTransform: 'none',
-    borderRadius: 999,
+    borderRadius: 1.5,
 }
 
 const quietButtonSx = {
     ...actionButtonSx,
-    px: 1,
-    py: 0.25,
-    fontSize: '0.8125rem',
-    color: '#111111',
+    color: 'text.secondary',
     '&:hover': {
-        bgcolor: 'rgba(255, 255, 255, 0.5)',
+        bgcolor: '#eff6ff',
+        color: '#0369a1',
     },
 }
 
 const accentButtonSx = {
     ...actionButtonSx,
-    color: '#111111',
-    bgcolor: '#ffffff',
-    borderColor: '#ffffff',
+    px: 1.1,
+    color: '#0369a1',
+    borderColor: '#bae6fd',
+    bgcolor: '#f0f9ff',
     '&:hover': {
-        borderColor: '#ffffff',
-        bgcolor: '#f8fafc',
+        borderColor: '#7dd3fc',
+        bgcolor: '#e0f2fe',
     },
 }
 
@@ -67,7 +67,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                         justifyContent: 'space-between',
                         gap: 1,
                     }}
@@ -76,16 +76,14 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                         component="h2"
                         sx={{
                             flexGrow: 1,
-                            color: '#000000',
-                            fontSize: { xs: '2rem', sm: '3.5rem' },
-                            fontWeight: 700,
+                            color: 'text.primary',
+                            fontSize: '1rem',
+                            fontWeight: 600,
                             letterSpacing: 0,
-                            lineHeight: 1,
-                            textAlign: 'center',
+                            lineHeight: 1.3,
                         }}
                     >
-                        {blog.title}
-                        {!visible && ` ${blog.author}`}
+                        {blog.title} {blog.author}
                     </Typography>
                     <Button
                         variant="text"
@@ -102,12 +100,11 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                         <Typography
                             component="h3"
                             sx={{
-                                color: '#000000',
-                                fontSize: { xs: '1.6rem', sm: '2.75rem' },
-                                fontWeight: 700,
+                                color: '#0369a1',
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
                                 letterSpacing: 0,
-                                lineHeight: 1,
-                                textAlign: 'center',
+                                lineHeight: 1.2,
                             }}
                         >
                             {blog.author}
@@ -116,16 +113,16 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'flex-end',
-                                gap: { xs: 1.5, sm: 4 },
-                                mt: 0.5,
+                                justifyContent: 'space-between',
+                                gap: 1,
+                                flexWrap: 'wrap',
                             }}
                         >
                             <Typography
                                 component="p"
                                 sx={{
-                                    color: '#111111',
-                                    fontSize: { xs: '1.2rem', sm: '1.75rem' },
+                                    color: 'text.secondary',
+                                    fontSize: '0.875rem',
                                     lineHeight: 1.2,
                                     overflowWrap: 'anywhere',
                                 }}
@@ -133,9 +130,9 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                                 url:{' '}
                                 <MuiLink
                                     href={blog.url}
-                                    underline="none"
+                                    underline="hover"
                                     sx={{
-                                        color: 'inherit',
+                                        color: '#0369a1',
                                         overflowWrap: 'anywhere',
                                     }}
                                 >
@@ -146,24 +143,24 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
                                 <Button
                                     aria-label="like"
                                     variant="outlined"
-                                    size="medium"
+                                    size="small"
                                     onClick={() => likeBlog(blog)}
                                     sx={accentButtonSx}
                                 >
-                                    Like
+                                    like
                                 </Button>
                             )}
                         </Box>
                         <Typography
                             className="likes"
                             variant="body2"
-                            sx={{ color: '#111111', textAlign: 'center' }}
+                            sx={{ color: 'text.secondary' }}
                         >
                             likes {blog.likes}
                         </Typography>
                         <Typography
                             variant="body2"
-                            sx={{ color: '#111111', textAlign: 'center' }}
+                            sx={{ color: 'text.secondary' }}
                         >
                             {blog?.user?.name}
                         </Typography>
