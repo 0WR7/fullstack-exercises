@@ -8,9 +8,9 @@ test('the form calls the event handler it received as props with the right detai
 
     render(<BlogForm createOnSubmit={createBlog} />)
 
-    const titleInput = screen.getByLabelText('title:')
-    const authorInput = screen.getByLabelText('author:')
-    const urlInput = screen.getByLabelText('url:')
+    const titleInput = screen.getByLabelText('Title')
+    const authorInput = screen.getByLabelText('Author')
+    const urlInput = screen.getByLabelText('Url')
     const createButton = screen.getByText('create')
 
     await user.type(titleInput, 'TestBlog1')

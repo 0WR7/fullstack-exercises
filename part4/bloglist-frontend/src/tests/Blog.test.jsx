@@ -16,38 +16,23 @@ describe('<Blog />', () => {
         },
     }
 
-    test('renders title and author but on URL or likes', () => {
-        //since its one <p> that renders both
-        render(<Blog blog={blog} />)
-
-        const titleAndAuthorP = screen.getByText(
-            'Blog component test Json Smith',
-            {
-                exact: false,
-            }
-        )
-        const url = screen.queryByText('google.com')
-        const likes = screen.queryByText('777')
-
-        expect(titleAndAuthorP).toBeDefined()
-        expect(url).toBeNull()
-        expect(likes).toBeNull()
-    })
-
-    test('url and likes are shown when button is pressed', async () => {
+    test('blog information and likes are displayed to unauthenticated users without action buttons', async () => {
         render(<Blog blog={blog} />)
 
         const user = userEvent.setup()
-        const button = screen.getByText('view')
 
-        await user.click(button)
+        expect(
+            screen.getByText('Blog component test Json Smith', {
+                exact: false,
+            })
+        ).toBeInTheDocument()
 
-        //fails if not --could be queryByText instead
-        const url = screen.getByText('google.com')
-        const likes = screen.getByText('likes 777')
+        await user.click(screen.getByRole('button', { name: 'view' }))
 
-        expect(url).toBeVisible()
-        expect(likes).toBeVisible()
+        expect(screen.getByText('google.com')).toBeVisible()
+        expect(screen.getByText('likes 777')).toBeVisible()
+        expect(screen.queryByRole('button', { name: 'like' })).toBeNull()
+        expect(screen.queryByRole('button', { name: 'remove' })).toBeNull()
     })
 
     test('like button clicked twice calls the event handler received as props twice', async () => {
@@ -66,11 +51,10 @@ describe('<Blog />', () => {
         )
 
         const user = userEvent.setup()
-        const button = screen.getByText('view')
 
-        await user.click(button)
+        await user.click(screen.getByRole('button', { name: 'view' }))
 
-        const likeButton = screen.getByText('like')
+        const likeButton = screen.getByRole('button', { name: 'like' })
 
         await user.click(likeButton)
         await user.click(likeButton)
@@ -78,7 +62,24 @@ describe('<Blog />', () => {
         expect(likeBlog.mock.calls).toHaveLength(2)
     })
 
-    test('remove button is rendered only for the user who created the blog', async () => {
+    test('authenticated users who are not the creator are shown only the like button', async () => {
+        const user = userEvent.setup()
+
+        render(
+            <Blog
+                blog={blog}
+                likeBlog={vi.fn()}
+                user={{ username: 'otheruser', name: 'Other User' }}
+            />
+        )
+
+        await user.click(screen.getByRole('button', { name: 'view' }))
+
+        expect(screen.getByRole('button', { name: 'like' })).toBeVisible()
+        expect(screen.queryByRole('button', { name: 'remove' })).toBeNull()
+    })
+
+    test('the blog creator is also shown the delete button', async () => {
         const blogWithUser = {
             ...blog,
             user: {
@@ -88,21 +89,19 @@ describe('<Blog />', () => {
             },
         }
         const user = userEvent.setup()
-        const { rerender } = render(
-            <Blog blog={blogWithUser} user={blogWithUser.user} />
-        )
 
-        await user.click(screen.getByText('view'))
-
-        expect(screen.getByText('remove')).toBeVisible()
-
-        rerender(
+        render(
             <Blog
                 blog={blogWithUser}
-                user={{ username: 'Albatros', id: 'ssdramhdd' }}
+                likeBlog={vi.fn()}
+                deleteBlog={vi.fn()}
+                user={blogWithUser.user}
             />
         )
 
-        expect(screen.queryByText('remove')).toBeNull()
+        await user.click(screen.getByRole('button', { name: 'view' }))
+
+        expect(screen.getByRole('button', { name: 'like' })).toBeVisible()
+        expect(screen.getByRole('button', { name: 'remove' })).toBeVisible()
     })
 })
