@@ -1,0 +1,69 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "includes": ["**", "!dist"]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "linter": {
+        "enabled": true
+    },
+    "overrides": [
+        {
+            "includes": ["**/*.{js,jsx}"],
+            "javascript": {
+                "globals": ["window", "document", "setTimeout", "clearTimeout"],
+                "parser": {
+                    "jsxEverywhere": true
+                },
+                "formatter": {
+                    "indentStyle": "space",
+                    "indentWidth": 4,
+                    "quoteStyle": "single",
+                    "semicolons": "asNeeded",
+                    "trailingCommas": "es5",
+                    "bracketSpacing": true,
+                    "lineEnding": "lf"
+                }
+            },
+            "linter": {
+                "rules": {
+                    "recommended": false,
+                    "correctness": {
+                        "recommended": true,
+                        "useExhaustiveDependencies": "error",
+                        "useHookAtTopLevel": "error",
+                        "noUnusedVariables": "error"
+                    },
+                    "style": {
+                        "useComponentExportOnlyModules": {
+                            "level": "warn",
+                            "options": {
+                                "allowConstantExport": true
+                            }
+                        }
+                    },
+                    "suspicious": {
+                        "recommended": true,
+                        "noConsole": "off",
+                        "noDoubleEquals": {
+                            "level": "error",
+                            "options": {
+                                "ignoreNull": false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
