@@ -7,16 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Package manager artifacts
 node_modules
-.pnpm-store
-.pnpm-state
-
 dist
 dist-ssr
 *.local
-.env
-
 
 # Editor directories and files
 .vscode/*

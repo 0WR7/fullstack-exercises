@@ -12,11 +12,14 @@ node_modules
 .pnpm-store
 .pnpm-state
 
+# Build output
 dist
 dist-ssr
-*.local
-.env
+coverage
 
+# Local environment files
+.env
+*.local
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +31,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+part4/blogs/node_modules/@mongodb-js/saslprep/dist/code-points-src.js.map

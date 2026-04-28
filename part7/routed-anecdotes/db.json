@@ -1,0 +1,25 @@
+{
+  "anecdotes": [
+    {
+      "content": "If it hurts, do it more often",
+      "votes": 20,
+      "id": "47145"
+    },
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "votes": 8,
+      "id": "21149"
+    },
+    {
+      "content": "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+      "votes": 9,
+      "id": "69581"
+    },
+    {
+      "content": "Premature optimization is the root of all evil.",
+      "votes": 20,
+      "id": "25170"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
