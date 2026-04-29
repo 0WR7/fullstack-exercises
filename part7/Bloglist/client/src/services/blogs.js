@@ -28,7 +28,6 @@ const update = async (blog) => {
 
 const deleteBlog = async (blogId) => {
     const url = `${baseUrl}/${blogId}`
-    console.log(url)
     const config = {
         headers: { Authorization: token },
     }

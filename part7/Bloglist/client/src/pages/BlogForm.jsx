@@ -6,31 +6,47 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import useField from '../hooks/useField'
+import { useBlogActions } from '../stores/blogStore'
+import { useNotificationActions } from '../stores/notificationStore'
+import { useUser } from '../stores/userStore'
 
 const BlogForm = ({ createOnSubmit }) => {
-    const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+    const { user } = useUser()
+    const title = useField('text')
+    const author = useField('text')
+    const url = useField('text')
+    const { add } = useBlogActions()
+    const navigate = useNavigate()
+    const { setNotification } = useNotificationActions()
 
-    const addBlog = (event) => {
+    const addBlog = async (event) => {
         event.preventDefault()
-        createOnSubmit({
-            ...newBlog,
-        })
+        const newBlog = {
+            title: title.value,
+            author: author.value,
+            url: url.value,
+        }
 
-        setNewBlog({ title: '', author: '', url: '' })
-    }
+        try {
+            if (createOnSubmit) {
+                createOnSubmit(newBlog)
+                return
+            }
 
-    const handleValueChange = (event) => {
-        const { name, value } = event.target
-        setNewBlog((prevBlog) => ({ ...prevBlog, [name]: value }))
+            await add({ ...newBlog, user })
+            const message = `A new blog ${newBlog.title} by ${newBlog.author} was added`
+            setNotification(message, 'success')
+            navigate('/')
+        } catch (_error) {
+            setNotification('failed to create blog', 'error')
+        }
     }
 
     return (
         <Container maxWidth="sm">
-            <Paper
-                elevation={0}
-                className="form-panel form-panel-compact"
-            >
+            <Paper elevation={0} className="form-panel form-panel-compact">
                 <Stack spacing={2}>
                     <Typography variant="h6" component="h4">
                         Create new
@@ -45,27 +61,21 @@ const BlogForm = ({ createOnSubmit }) => {
                         <TextField
                             id="title"
                             label="Title"
-                            name="title"
-                            value={newBlog.title}
-                            onChange={handleValueChange}
+                            {...title}
                             fullWidth
                             size="small"
                         />
                         <TextField
                             id="author"
                             label="Author"
-                            name="author"
-                            value={newBlog.author}
-                            onChange={handleValueChange}
+                            {...author}
                             fullWidth
                             size="small"
                         />
                         <TextField
                             id="url"
                             label="Url"
-                            name="url"
-                            value={newBlog.url}
-                            onChange={handleValueChange}
+                            {...url}
                             fullWidth
                             size="small"
                         />

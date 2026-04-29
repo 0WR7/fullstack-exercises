@@ -93,6 +93,78 @@
     margin-bottom: 16px;
 }
 
+.page-container.MuiContainer-root {
+    padding-top: 24px;
+    padding-bottom: 32px;
+}
+
+.page-panel.MuiPaper-root {
+    padding: 20px;
+    background-color: rgba(248, 252, 255, 0.92);
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.page-title.MuiTypography-root {
+    margin-bottom: 12px;
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.page-subtitle.MuiTypography-root {
+    color: rgba(0, 0, 0, 0.6);
+    letter-spacing: 0;
+}
+
+.section-title.MuiTypography-root {
+    margin-bottom: 8px;
+    color: #0369a1;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+.content-link.MuiLink-root {
+    color: #0369a1;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.content-list.MuiList-root {
+    border-top: 1px solid #dbeafe;
+}
+
+.content-list-item.MuiListItem-root {
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dbeafe;
+}
+
+.data-table-wrap {
+    border: 1px solid #dbeafe;
+    border-radius: 6px;
+}
+
+.data-table .MuiTableCell-root {
+    border-bottom-color: #dbeafe;
+    letter-spacing: 0;
+}
+
+.data-table .MuiTableHead-root .MuiTableCell-root {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    background-color: #f0f9ff;
+}
+
+.data-table .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root {
+    border-bottom: 0;
+}
+
 .blog-card.MuiPaper-root {
     width: min(100%, 720px);
     margin: 10px auto;
@@ -207,5 +279,9 @@
     .blog-card.MuiPaper-root {
         padding-right: 16px;
         padding-left: 16px;
+    }
+
+    .page-panel.MuiPaper-root {
+        padding: 24px;
     }
 }
