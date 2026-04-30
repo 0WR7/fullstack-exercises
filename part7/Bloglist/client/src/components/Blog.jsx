@@ -7,6 +7,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Comment from './Comment'
 import normalizeErrorMessage from '../helpers/errorHandling'
 import { useBlogActions } from '../stores/blogStore'
 import { useNotificationActions } from '../stores/notificationStore'
@@ -108,6 +109,7 @@ const Blog = ({ blog }) => {
                                 remove
                             </Button>
                         )}
+                        <Comment blog={blog} />
                     </>
                 )}
             </Stack>

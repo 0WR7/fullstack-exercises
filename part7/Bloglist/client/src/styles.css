@@ -236,6 +236,59 @@
     border-color: #bae6fd;
 }
 
+.comment-section {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #dbeafe;
+}
+
+.comment-title.MuiTypography-root {
+    margin-bottom: 8px;
+    color: #0369a1;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.comment-form {
+    margin-bottom: 10px;
+}
+
+.comment-input .MuiOutlinedInput-root {
+    background-color: #fff;
+    border-radius: 6px;
+}
+
+.comment-submit.MuiButton-root {
+    min-height: 40px;
+    padding-right: 14px;
+    padding-left: 14px;
+    background-color: #0369a1;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: none;
+    box-shadow: none;
+}
+
+.comment-submit.MuiButton-root:hover {
+    background-color: #075985;
+    box-shadow: none;
+}
+
+.comment-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.comment-list-item {
+    padding: 4px 0;
+    color: rgba(0, 0, 0, 0.72);
+    font-size: 0.875rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
 .form-panel.MuiPaper-root {
     padding: 24px;
     background-color: #fff;

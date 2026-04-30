@@ -1,4 +1,21 @@
 const mongoose = require('mongoose')
+
+const commentSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+        minlength: 2,
+    },
+})
+
+commentSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString()
+        delete returnedObject._id
+        delete returnedObject.__v
+    },
+})
+
 const blogSchema = mongoose.Schema({
     title: {
         type: String,
@@ -17,6 +34,7 @@ const blogSchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
+    comments: [commentSchema],
 })
 
 blogSchema.set('toJSON', {
